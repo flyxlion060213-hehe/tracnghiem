@@ -2,128 +2,148 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Thi Toán 7 - 100 Câu Hỏi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>Violympic Master - 100 Câu / 30 Phút</title>
     <style>
-        :root { --cyan: #00f2ff; --pink: #ff00ff; --bg: #050a18; }
-        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .container { width: 95%; max-width: 900px; height: 92vh; background: rgba(10, 20, 50, 0.95); border: 2px solid var(--cyan); display: flex; flex-direction: column; clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%); }
-        .header { padding: 15px 25px; border-bottom: 1px solid var(--cyan); display: flex; justify-content: space-between; font-family: 'Orbitron'; color: var(--cyan); }
-        #quiz-content { flex: 1; padding: 30px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--cyan) transparent; }
-        .question { font-size: 1.4rem; margin-bottom: 20px; line-height: 1.4; border-left: 4px solid var(--pink); padding-left: 15px; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn-opt { background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 242, 255, 0.3); color: white; padding: 18px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; text-align: left; }
-        .btn-opt:hover { background: var(--cyan); color: black; font-weight: bold; transform: scale(1.02); }
-        .progress-container { height: 6px; background: rgba(255,255,255,0.1); }
-        #bar { height: 100%; background: linear-gradient(90deg, var(--pink), var(--cyan)); width: 0%; transition: 0.2s; }
-        .img-box { background: rgba(255,255,255,0.05); border: 1px dashed var(--cyan); padding: 10px; margin-bottom: 15px; text-align: center; color: #888; font-style: italic; }
+        :root { --primary: #00d4ff; --accent: #ffd700; --bg: #0d1117; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app { width: 95%; max-width: 900px; height: 90vh; background: #161b22; border: 2px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header { padding: 20px; border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
+        #timer { color: #00ff00; font-size: 2.2rem; font-family: 'Courier New', monospace; font-weight: bold; }
+        #quiz-body { flex: 1; padding: 40px; overflow-y: auto; }
+        .q-text { font-size: 1.5rem; margin-bottom: 30px; line-height: 1.6; color: #f0f6fc; border-left: 6px solid var(--accent); padding-left: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-opt { background: #21262d; border: 1px solid #30363d; color: white; padding: 20px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; text-align: left; }
+        .btn-opt:hover { border-color: var(--accent); background: #30363d; transform: translateY(-2px); }
+        .btn-opt:active { transform: scale(0.95); }
+        .progress-bar { height: 10px; background: #30363d; width: 100%; }
+        #fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: 0.3s; }
+        .category-tag { background: var(--accent); color: black; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="app">
     <div class="header">
-        <span>MATH_7_TOTAL_EXAM</span>
-        <span>TIME: <span id="timer" style="color:var(--pink)">30:00</span></span>
-        <span>PROGRESS: <span id="qn-count">0</span>/100</span>
+        <div style="font-weight: bold; color: var(--primary);">VIOLYMPIC MASTER 7</div>
+        <div id="timer">30:00</div>
+        <div style="font-family: monospace;">TIẾN ĐỘ: <span id="qn-count">0</span>/100</div>
     </div>
-    <div id="quiz-content">
-        <div style="text-align:center; padding-top: 15%;">
-            <h1 style="font-family:'Orbitron'; color:var(--cyan); font-size: 3rem;">SYSTEM READY</h1>
-            <p>50 SỐ | 40 HÌNH | 10 THỐNG KÊ</p>
-            <button class="btn-opt" style="width:200px; text-align:center; margin: 30px auto;" onclick="start()">BẮT ĐẦU THI</button>
+    
+    <div id="quiz-body">
+        <div style="text-align:center; padding-top: 10%;">
+            <h1 style="color: var(--accent); font-size: 3rem;">THỬ THÁCH 30 PHÚT</h1>
+            <p style="font-size: 1.2rem; opacity: 0.8;">Hệ thống câu hỏi nâng cao tích hợp thay số tự động</p>
+            <ul style="text-align: left; display: inline-block; line-height: 2;">
+                <li>⚡ 100 Câu hỏi tư duy Violympic</li>
+                <li>⚡ Thời gian: 30 phút (Hợp lý để tính toán)</li>
+                <li>⚡ Đáp án trộn ngẫu nhiên ABCD</li>
+            </ul>
+            <br><br>
+            <button style="background: var(--primary); border:none; padding: 20px 60px; font-size: 1.8rem; font-weight:bold; cursor:pointer; border-radius:10px; color: black;" onclick="start()">BẮT ĐẦU</button>
         </div>
     </div>
-    <div class="progress-container"><div id="bar"></div></div>
+    
+    <div class="progress-bar"><div id="fill"></div></div>
 </div>
 
 <script>
-const rawQuestions = [
-    // --- 50 CÂU SỐ HỮU TỈ & ĐẠI SỐ (1-50) ---
-    { q: "Số đối của -3/4 là:", o: ["3/4", "-3/4", "4/3", "-4/3"], a: 0 },
-    { q: "Kết quả của (1/2)^2 là:", o: ["1/4", "1/2", "1/8", "1"], a: 0 },
-    { q: "Tìm x nếu x + 0.5 = 1.2", o: ["0.7", "1.7", "-0.7", "0.5"], a: 0 },
-    { q: "Căn bậc hai số học của 100 là:", o: ["10", "-10", "±10", "50"], a: 0 },
-    { q: "Số nào là số vô tỉ?", o: ["√2", "0.5", "1/3", "√16"], a: 0 },
-    // ... (Phần code này đã được tối ưu để tự sinh 100 câu dựa trên dữ liệu chuẩn bên dưới)
-];
+    const questions = [];
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-// Dữ liệu mẫu cho từng loại (Bạn có thể thêm chi tiết ở đây)
-const mathData = {
-    so: [
-        {q: "Số hữu tỉ a/b có b phải:", o: ["b > 0", "b ≠ 0", "b = 0", "b < 0"], a: 1},
-        {q: "Giá trị tuyệt đối của -10 là:", o: ["-10", "10", "0", "1"], a: 1},
-        {q: "Làm tròn 3.1415 đến hàng phần trăm:", o: ["3.14", "3.15", "3.1", "3"], a: 0},
-        {q: "Nếu x/3 = 4/6 thì x bằng:", o: ["1", "2", "3", "4"], a: 1},
-        {q: "Nghiệm của đa thức x-2 là:", o: ["0", "2", "-2", "1"], a: 1}
-    ],
-    hinh: [
-        {q: "Tổng 3 góc trong tam giác là:", o: ["90°", "180°", "360°", "270°"], a: 1, img: "Image of a triangle with angles a,b,c labeled"},
-        {q: "Hai góc kề bù có tổng là:", o: ["90°", "180°", "360°", "45°"], a: 1, img: "Image of two adjacent angles forming a straight line"},
-        {q: "Trọng tâm tam giác là giao điểm 3 đường:", o: ["Đường cao", "Trung tuyến", "Phân giác", "Trung trực"], a: 1, img: "Image of a triangle with three medians intersecting at centroid G"},
-        {q: "Hình lập phương có mấy mặt?", o: ["4", "6", "8", "12"], a: 1, img: "Image of a cube showing 6 faces"},
-        {q: "Tam giác cân có hai góc đáy:", o: ["Phụ nhau", "Bù nhau", "Bằng nhau", "Khác nhau"], a: 2, img: "Image of an isosceles triangle with base angles marked equal"}
-    ],
-    tk: [
-        {q: "Xác suất mặt ngửa khi tung đồng xu là:", o: ["0", "0.5", "1", "0.25"], a: 1},
-        {q: "Biểu đồ nào thể hiện xu hướng thay đổi?", o: ["Hình quạt", "Cột", "Đoạn thẳng", "Tròn"], a: 2, img: "Image of a line graph showing a trend over time"},
-        {q: "Xác suất biến cố chắc chắn là:", o: ["0", "0.5", "1", "10"], a: 2}
-    ]
-};
+    function mix(c, w) {
+        let o = [c, ...w];
+        o.sort(() => Math.random() - 0.5);
+        return { o, a: o.indexOf(c) };
+    }
 
-// Tạo đủ 100 câu
-const fullQuiz = [];
-for(let i=0; i<50; i++) fullQuiz.push({...mathData.so[i % mathData.so.length], q: `[SỐ] Câu ${i+1}: ${mathData.so[i % mathData.so.length].q} (Biến thể ${i})`});
-for(let i=0; i<40; i++) fullQuiz.push({...mathData.hinh[i % mathData.hinh.length], q: `[HÌNH] Câu ${i+51}: ${mathData.hinh[i % mathData.hinh.length].q} (Biến thể ${i})`});
-for(let i=0; i<10; i++) fullQuiz.push({...mathData.tk[i % mathData.tk.length], q: `[TK-XS] Câu ${i+91}: ${mathData.tk[i % mathData.tk.length].q}`});
+    // Sinh 100 câu hỏi Violympic Master
+    for(let i=0; i<100; i++) {
+        let type = rand(1, 6);
+        let q, c, w, cat;
 
-let current = 0, score = 0, timeLeft = 1800;
+        if (type === 1) {
+            cat = "HÌNH HỌC NÂNG CAO";
+            let g = rand(40, 140);
+            q = `Cho tam giác ABC cân tại A có góc A = ${g}°. Đường cao AH và đường phân giác BD cắt nhau tại K. Số đo góc AKD phụ thuộc vào góc A, tính góc AKD theo g? (Dạng tổng quát: 90° + A/4)`;
+            c = `${90 + g/4}°`; w = [`${g}°`, `${180-g}°`, `${90 + g/2}°` ];
+        } else if (type === 2) {
+            cat = "ĐẠI SỐ - TÌM X";
+            let a = rand(2, 9);
+            q = `Tìm x biết: (x - 1)^2 + (y + 2)^2 + (z - ${a})^2 = 0. Giá trị x + y + z là:`;
+            c = `${1 - 2 + a}`; w = [`0`, `${a}`, `${a+3}` ];
+        } else if (type === 3) {
+            cat = "TỈ LỆ THỨC";
+            let s = rand(10, 50);
+            q = `Biết 2x = 3y = 5z và x + y + z = ${s}. Giá trị của x là (làm tròn):`;
+            let k = s / (1/2 + 1/3 + 1/5);
+            c = `${(k/2).toFixed(1)}`; w = [`${(k/3).toFixed(1)}`, `${(k/5).toFixed(1)}`, `${s}` ];
+        } else if (type === 4) {
+            cat = "SỐ HỌC LŨY THỪA";
+            let n = rand(2, 5);
+            q = `Tìm x biết 2^x + 2^{x+3} = ${Math.pow(2, n) + Math.pow(2, n+3)}. Giá trị x là:`;
+            c = `${n}`; w = [`${n+1}`, `${n+3}`, `${2*n}` ];
+        } else if (type === 5) {
+            cat = "GÓC KỀ BÙ & PHÂN GIÁC";
+            let goc = rand(10, 170);
+            q = `Cho góc ABC = ${goc}°. Góc CBD kề bù với ABC. Gọi Bm là phân giác góc CBD. Tính góc ABm?`;
+            c = `${goc + (180-goc)/2}°`; w = [`90°`, `${(180-goc)/2}°`, `180°` ];
+        } else {
+            cat = "TOÁN ĐỐ TỈ LỆ";
+            let thợ = rand(3, 10);
+            let ngày = rand(5, 15);
+            q = `${thợ} người làm xong công việc trong ${ngày} ngày. Muốn làm xong trong ${ngày-2} ngày cần thêm bao nhiêu người (năng suất như nhau)?`;
+            let total = Math.ceil((thợ * ngày) / (ngày - 2));
+            c = `${total - thợ} người`; w = [`${total} người`, `2 người`, `5 người` ];
+        }
+        const res = mix(c, w);
+        questions.push({ q, o: res.o, a: res.a, cat });
+    }
 
-function start() {
-    render();
-    setInterval(() => {
-        if(timeLeft > 0) {
-            timeLeft--;
-            let m = Math.floor(timeLeft/60), s = timeLeft%60;
-            document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
-        } else { finish(); }
-    }, 1000);
-}
+    let curr = 0, score = 0, time = 1800; // 30 phút
 
-function render() {
-    if(current >= 100) return finish();
-    const d = fullQuiz[current];
-    document.getElementById('qn-count').innerText = current + 1;
-    document.getElementById('bar').style.width = `${current}%`;
-    
-    let imgTag = d.img ? `<div class="img-box">[HÌNH MINH HỌA: ${d.img}]</div>` : "";
-    
-    document.getElementById('quiz-content').innerHTML = `
-        <div class="question">${d.q}</div>
-        ${imgTag}
-        <div class="options">
-            ${d.o.map((opt, i) => `<button class="btn-opt" onclick="check(${i})">${opt}</button>`).join('')}
-        </div>
-    `;
-}
+    function start() {
+        render();
+        const interval = setInterval(() => {
+            if(time > 0) {
+                time--;
+                let m = Math.floor(time/60), s = time%60;
+                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                if(time <= 300) document.getElementById('timer').style.color = "#ff4d4d";
+            } else { clearInterval(interval); finish(); }
+        }, 1000);
+    }
 
-function check(idx) {
-    if(idx === fullQuiz[current].a) score++;
-    current++;
-    render();
-}
+    function render() {
+        if(curr >= 100) return finish();
+        const item = questions[curr];
+        document.getElementById('qn-count').innerText = curr + 1;
+        document.getElementById('fill').style.width = `${curr}%`;
+        document.getElementById('quiz-body').innerHTML = `
+            <div class="category-tag">${item.cat}</div>
+            <div class="q-text"><b>Câu ${curr+1}:</b> ${item.q}</div>
+            <div class="grid">
+                ${item.o.map((opt, i) => `<button class="btn-opt" onclick="check(${i})"><b>${String.fromCharCode(65+i)}.</b> ${opt}</button>`).join('')}
+            </div>
+        `;
+    }
 
-function finish() {
-    document.getElementById('quiz-content').innerHTML = `
-        <div style="text-align:center; padding-top:10%">
-            <h1 style="color:var(--cyan); font-family:'Orbitron'">MISSION COMPLETE</h1>
-            <div style="font-size: 6rem; color:var(--pink)">${score}/100</div>
-            <p>BẠN ĐÃ HOÀN THÀNH BÀI THI TỔNG HỢP TOÁN 7</p>
-            <button class="btn-opt" style="width:200px; text-align:center; margin: 20px auto;" onclick="location.reload()">REBOOT</button>
-        </div>
-    `;
-}
+    window.check = (i) => {
+        if(i === questions[curr].a) score++;
+        curr++;
+        render();
+    }
+
+    function finish() {
+        document.getElementById('quiz-body').innerHTML = `
+            <div style="text-align:center; padding-top:5%">
+                <h1 style="color:var(--accent)">HOÀN THÀNH BÀI THI</h1>
+                <div style="font-size: 6rem; color: var(--primary); font-weight: bold;">${score}/100</div>
+                <p style="font-size: 1.5rem;">Điểm số: ${(score/10).toFixed(1)}</p>
+                <p>Thời gian sử dụng: ${Math.floor((1800-time)/60)} phút ${(1800-time)%60} giây</p>
+                <button style="background:var(--accent); border:none; padding:15px 40px; cursor:pointer; font-weight:bold; border-radius:5px; color: black;" onclick="location.reload()">THI LẠI</button>
+            </div>
+        `;
+    }
 </script>
 </body>
 </html>
