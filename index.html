@@ -3,201 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Learning Lab | 100 Mins Challenge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <title>Toán Học Challenge | 100 Phút</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-blue: #007bff;
-      --light-blue: #e7f1ff;
-      --success-green: #2ecc71;
-      --text-main: #2d3436;
-      --bg-body: #f4f7f6;
+      --primary: #007bff;
+      --bg: #f0f2f5;
       --white: #ffffff;
-      --shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+      --text: #1a1a1a;
     }
 
     body {
-      background-color: var(--bg-body);
+      background-color: var(--bg);
       font-family: 'Inter', sans-serif;
-      margin: 0; display: flex; justify-content: center; align-items: center;
-      height: 100vh; overflow: hidden;
+      color: var(--text);
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0;
     }
 
-    .card {
-      background: var(--white); padding: 40px; border-radius: 24px;
-      width: 90%; max-width: 500px; box-shadow: var(--shadow); text-align: center;
+    .quiz-card {
+      background: var(--white);
+      padding: 40px; border-radius: 20px;
+      width: 90%; max-width: 550px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      text-align: center;
     }
 
-    h1 { font-family: 'Montserrat', sans-serif; color: var(--primary-blue); font-weight: 800; }
-
-    .btn {
-      display: block; width: 100%; margin: 12px 0; padding: 16px;
-      font-weight: 600; color: var(--primary-blue); background: var(--white);
-      border: 2px solid var(--primary-blue); border-radius: 12px; cursor: pointer; transition: 0.2s;
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 30px; padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
     }
 
-    .btn:hover { background: var(--primary-blue); color: var(--white); transform: translateY(-2px); }
-
-    .sub-menu { display: none; }
-
-    /* OVERLAY */
-    .overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(45, 52, 54, 0.6); backdrop-filter: blur(8px);
-      z-index: 1000; justify-content: center; align-items: center;
+    #timer {
+      font-weight: 700; color: #ff4757; font-size: 1.2rem;
+      background: #fff0f0; padding: 5px 15px; border-radius: 8px;
     }
 
-    .window {
-      width: 95%; max-width: 700px; background: var(--white); border-radius: 20px;
-      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    .q-count { font-weight: 600; color: var(--primary); }
+
+    .q-text {
+      font-size: 1.5rem; font-weight: 700;
+      margin-bottom: 35px; min-height: 80px;
+      line-height: 1.4;
     }
 
-    .header { padding: 20px; background: var(--primary-blue); color: white; display: flex; justify-content: space-between; font-weight: 700; }
-
-    .quiz-body { padding: 40px; text-align: center; }
-    .q-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; min-height: 60px; }
-    
-    /* Đáp án trắc nghiệm */
-    .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-    /* Trả lời nhanh (Input) */
-    .quick-input-area { display: none; margin-top: 20px; }
-    .quick-input {
-      width: 60%; padding: 15px; border: 2px solid var(--primary-blue);
-      border-radius: 10px; font-size: 1.2rem; text-align: center; outline: none;
+    .ans-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
     }
 
-    #musicBtn { position: fixed; top: 20px; right: 25px; border: none; background: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; box-shadow: var(--shadow); font-size: 1.2rem; }
+    .btn-ans {
+      padding: 18px; font-size: 1.1rem; font-weight: 600;
+      color: var(--primary); background: #fff;
+      border: 2px solid var(--primary); border-radius: 12px;
+      cursor: pointer; transition: 0.2s;
+    }
+
+    .btn-ans:hover {
+      background: var(--primary); color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .score-board {
+      margin-top: 30px; font-size: 0.9rem; color: #666;
+    }
+
+    /* Màn hình kết thúc */
+    #resultScreen { display: none; }
+    .btn-restart {
+      margin-top: 20px; padding: 12px 30px;
+      background: var(--primary); color: white; border: none;
+      border-radius: 8px; cursor: pointer; font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
-  <audio id="bgMusic" loop><source src="Landing.mp3" type="audio/mpeg"></audio>
-  <button id="musicBtn">🎧</button>
-
-  <div class="card">
-    <h1>Learning Lab</h1>
-    <p style="color: #636e72;">Thử thách 100 phút: Trắc nghiệm & Phản xạ</p>
-    
-    <div id="mainBtns">
-      <button class="btn" onclick="openChat()">AI Assistant</button>
-      <button class="btn" onclick="showMenu('studyMenu')">Learning Hub</button>
+  <div class="quiz-card" id="quizScreen">
+    <div class="header">
+      <span class="q-count">Câu hỏi: <span id="qNum">1</span>/100</span>
+      <span id="timer">100:00</span>
     </div>
 
-    <div id="studyMenu" class="sub-menu">
-      <button class="btn" style="background: var(--light-blue);" onclick="startChallenge()">BẮT ĐẦU CHALLENGE (100P)</button>
-      <button class="btn" onclick="back()">Quay lại</button>
+    <div id="qText" class="q-text">Đang khởi tạo...</div>
+
+    <div class="ans-grid" id="ansGrid">
+      </div>
+
+    <div class="score-board">
+      Đúng: <span id="score">0</span> | Sai: <span id="wrong">0</span>
     </div>
   </div>
 
-  <div id="quizOverlay" class="overlay">
-    <div class="window">
-      <div class="header">
-        <span id="modeName">TRẮC NGHIỆM</span>
-        <span id="timer">100:00</span>
-      </div>
-      <div class="quiz-body">
-        <div id="qText" class="q-text">Đang tải...</div>
-        
-        <div id="ansGrid" class="ans-grid"></div>
-
-        <div id="quickArea" class="quick-input-area">
-          <input type="number" id="quickInput" class="quick-input" placeholder="Nhập kết quả...">
-          <button class="btn" style="width: auto; display: inline-block; margin-left: 10px;" onclick="checkQuick()">GỬI</button>
-        </div>
-
-        <div style="margin-top: 30px; font-size: 0.9rem;">
-          Câu: <b><span id="qCount">1</span></b> | Đúng: <b style="color: var(--success-green);"><span id="score">0</span></b>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="chatOverlay" class="overlay">
-    <div class="window" style="height: 80vh;">
-      <div class="header"><span>AI Chatbot</span> <button onclick="closeAll()" style="color:white; background:none; border:none; cursor:pointer;">Đóng</button></div>
-      <iframe src="https://study-bot-web-e2um.onrender.com/" style="width:100%; height:100%; border:none;"></iframe>
-    </div>
+  <div class="quiz-card" id="resultScreen">
+    <h2 style="color: var(--primary)">KẾT QUẢ THỬ THÁCH</h2>
+    <p style="font-size: 1.2rem;">Bạn đã hoàn thành 100 câu hỏi!</p>
+    <h1 id="finalScore" style="font-size: 3rem; margin: 20px 0;">0</h1>
+    <p>Điểm chính xác</p>
+    <button class="btn-restart" onclick="location.reload()">LÀM LẠI MỚI</button>
   </div>
 
   <script>
-    let currentQ = 1, score = 0, timer, timeLeft = 6000, correctAns = 0;
+    let currentQ = 1;
+    let score = 0;
+    let wrong = 0;
+    let timeLeft = 6000; // 100 phút = 6000 giây
+    let timer;
 
-    function showMenu(id) { document.getElementById('mainBtns').style.display='none'; document.getElementById(id).style.display='block'; }
-    function back() { document.querySelectorAll('.sub-menu').forEach(m=>m.style.display='none'); document.getElementById('mainBtns').style.display='block'; }
-    function openChat() { document.getElementById('chatOverlay').style.display='flex'; }
-    function closeAll() { document.querySelectorAll('.overlay').forEach(o=>o.style.display='none'); clearInterval(timer); }
-
-    function startChallenge() {
-      document.getElementById('quizOverlay').style.display = 'flex';
-      currentQ = 1; score = 0; timeLeft = 6000;
+    function initQuiz() {
       loadQuestion();
-      runTimer();
+      startTimer();
     }
 
     function loadQuestion() {
-      document.getElementById('qCount').innerText = currentQ;
-      document.getElementById('score').innerText = score;
-      const isQuick = Math.random() > 0.5; // Ngẫu nhiên chọn chế độ
-      
-      const a = Math.floor(Math.random() * 100) + 20;
-      correctAns = 180 - a;
-
-      if(isQuick) {
-        // CHẾ ĐỘ TRẢ LỜI NHANH
-        document.getElementById('modeName').innerText = "TRẢ LỜI NHANH";
-        document.getElementById('ansGrid').style.display = 'none';
-        document.getElementById('quickArea').style.display = 'block';
-        document.getElementById('qText').innerText = `Góc kề bù với góc ${a}° là bao nhiêu độ?`;
-        document.getElementById('quickInput').value = '';
-        document.getElementById('quickInput').focus();
-      } else {
-        // CHẾ ĐỘ TRẮC NGHIỆM
-        document.getElementById('modeName').innerText = "TRẮC NGHIỆM";
-        document.getElementById('ansGrid').style.display = 'grid';
-        document.getElementById('quickArea').style.display = 'none';
-        document.getElementById('qText').innerText = `Cho hai góc kề bù, một góc bằng ${a}°. Góc còn lại là:`;
-        
-        const grid = document.getElementById('ansGrid');
-        grid.innerHTML = '';
-        [correctAns, correctAns+10, correctAns-10, 90].sort(()=>Math.random()-0.5).forEach(val => {
-          const b = document.createElement('button');
-          b.className = 'btn'; b.innerText = val + "°";
-          b.onclick = () => { if(val === correctAns) score++; currentQ++; loadQuestion(); };
-          grid.appendChild(b);
-        });
+      if (currentQ > 100) {
+        showResult();
+        return;
       }
+
+      document.getElementById('qNum').innerText = currentQ;
+      
+      // Tạo câu hỏi ngẫu nhiên về góc kề bù
+      const angleA = Math.floor(Math.random() * 140) + 10;
+      const correctAns = 180 - angleA;
+      
+      document.getElementById('qText').innerText = `Cho hai góc kề bù, biết một góc bằng ${angleA}°. Tính góc còn lại?`;
+
+      // Tạo mảng đáp án
+      const choices = [
+        correctAns,
+        correctAns + 10,
+        180 - correctAns,
+        90
+      ];
+
+      // Xáo trộn đáp án
+      choices.sort(() => Math.random() - 0.5);
+
+      const grid = document.getElementById('ansGrid');
+      grid.innerHTML = '';
+
+      choices.forEach(val => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-ans';
+        btn.innerText = val + "°";
+        btn.onclick = () => checkAnswer(val, correctAns);
+        grid.appendChild(btn);
+      });
     }
 
-    function checkQuick() {
-      const val = parseInt(document.getElementById('quickInput').value);
-      if(val === correctAns) score++;
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        score++;
+        document.getElementById('score').innerText = score;
+      } else {
+        wrong++;
+        document.getElementById('wrong').innerText = wrong;
+      }
       currentQ++;
       loadQuestion();
     }
 
-    // Cho phép nhấn Enter để gửi câu trả lời nhanh
-    document.getElementById('quickInput').addEventListener('keypress', (e) => {
-      if(e.key === 'Enter') checkQuick();
-    });
-
-    function runTimer() {
-      clearInterval(timer);
+    function startTimer() {
       timer = setInterval(() => {
-        let m = Math.floor(timeLeft/60), s = timeLeft%60;
-        document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
-        if(timeLeft-- <= 0) { clearInterval(timer); alert("Hết giờ! Kết quả: " + score + " câu đúng."); closeAll(); }
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        
+        document.getElementById('timer').innerText = 
+          `${mins}:${secs < 10 ? '0' + secs : secs}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          showResult();
+        }
+        timeLeft--;
       }, 1000);
     }
 
-    // Âm nhạc
-    let playing = false;
-    document.getElementById('musicBtn').onclick = () => {
-      const m = document.getElementById('bgMusic');
-      if(!playing) m.play(); else m.pause();
-      playing = !playing;
-      document.getElementById('musicBtn').innerText = playing ? '🔊' : '🎧';
-    };
+    function showResult() {
+      document.getElementById('quizScreen').style.display = 'none';
+      document.getElementById('resultScreen').style.display = 'block';
+      document.getElementById('finalScore').innerText = score + "/100";
+      clearInterval(timer);
+    }
+
+    // Chạy ngay khi load trang
+    initQuiz();
   </script>
 </body>
 </html>
