@@ -1,149 +1,203 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Violympic Master - 100 Câu / 30 Phút</title>
-    <style>
-        :root { --primary: #00d4ff; --accent: #ffd700; --bg: #0d1117; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .app { width: 95%; max-width: 900px; height: 90vh; background: #161b22; border: 2px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .header { padding: 20px; border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
-        #timer { color: #00ff00; font-size: 2.2rem; font-family: 'Courier New', monospace; font-weight: bold; }
-        #quiz-body { flex: 1; padding: 40px; overflow-y: auto; }
-        .q-text { font-size: 1.5rem; margin-bottom: 30px; line-height: 1.6; color: #f0f6fc; border-left: 6px solid var(--accent); padding-left: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .btn-opt { background: #21262d; border: 1px solid #30363d; color: white; padding: 20px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; text-align: left; }
-        .btn-opt:hover { border-color: var(--accent); background: #30363d; transform: translateY(-2px); }
-        .btn-opt:active { transform: scale(0.95); }
-        .progress-bar { height: 10px; background: #30363d; width: 100%; }
-        #fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: 0.3s; }
-        .category-tag { background: var(--accent); color: black; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Learning Lab | 100 Mins Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #007bff;
+      --light-blue: #e7f1ff;
+      --success-green: #2ecc71;
+      --text-main: #2d3436;
+      --bg-body: #f4f7f6;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+    }
+
+    body {
+      background-color: var(--bg-body);
+      font-family: 'Inter', sans-serif;
+      margin: 0; display: flex; justify-content: center; align-items: center;
+      height: 100vh; overflow: hidden;
+    }
+
+    .card {
+      background: var(--white); padding: 40px; border-radius: 24px;
+      width: 90%; max-width: 500px; box-shadow: var(--shadow); text-align: center;
+    }
+
+    h1 { font-family: 'Montserrat', sans-serif; color: var(--primary-blue); font-weight: 800; }
+
+    .btn {
+      display: block; width: 100%; margin: 12px 0; padding: 16px;
+      font-weight: 600; color: var(--primary-blue); background: var(--white);
+      border: 2px solid var(--primary-blue); border-radius: 12px; cursor: pointer; transition: 0.2s;
+    }
+
+    .btn:hover { background: var(--primary-blue); color: var(--white); transform: translateY(-2px); }
+
+    .sub-menu { display: none; }
+
+    /* OVERLAY */
+    .overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(45, 52, 54, 0.6); backdrop-filter: blur(8px);
+      z-index: 1000; justify-content: center; align-items: center;
+    }
+
+    .window {
+      width: 95%; max-width: 700px; background: var(--white); border-radius: 20px;
+      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .header { padding: 20px; background: var(--primary-blue); color: white; display: flex; justify-content: space-between; font-weight: 700; }
+
+    .quiz-body { padding: 40px; text-align: center; }
+    .q-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; min-height: 60px; }
+    
+    /* Đáp án trắc nghiệm */
+    .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* Trả lời nhanh (Input) */
+    .quick-input-area { display: none; margin-top: 20px; }
+    .quick-input {
+      width: 60%; padding: 15px; border: 2px solid var(--primary-blue);
+      border-radius: 10px; font-size: 1.2rem; text-align: center; outline: none;
+    }
+
+    #musicBtn { position: fixed; top: 20px; right: 25px; border: none; background: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; box-shadow: var(--shadow); font-size: 1.2rem; }
+  </style>
 </head>
 <body>
 
-<div class="app">
-    <div class="header">
-        <div style="font-weight: bold; color: var(--primary);">VIOLYMPIC MASTER 7</div>
-        <div id="timer">30:00</div>
-        <div style="font-family: monospace;">TIẾN ĐỘ: <span id="qn-count">0</span>/100</div>
-    </div>
+  <audio id="bgMusic" loop><source src="Landing.mp3" type="audio/mpeg"></audio>
+  <button id="musicBtn">🎧</button>
+
+  <div class="card">
+    <h1>Learning Lab</h1>
+    <p style="color: #636e72;">Thử thách 100 phút: Trắc nghiệm & Phản xạ</p>
     
-    <div id="quiz-body">
-        <div style="text-align:center; padding-top: 10%;">
-            <h1 style="color: var(--accent); font-size: 3rem;">THỬ THÁCH 30 PHÚT</h1>
-            <p style="font-size: 1.2rem; opacity: 0.8;">Hệ thống câu hỏi nâng cao tích hợp thay số tự động</p>
-            <ul style="text-align: left; display: inline-block; line-height: 2;">
-                <li>⚡ 100 Câu hỏi tư duy Violympic</li>
-                <li>⚡ Thời gian: 30 phút (Hợp lý để tính toán)</li>
-                <li>⚡ Đáp án trộn ngẫu nhiên ABCD</li>
-            </ul>
-            <br><br>
-            <button style="background: var(--primary); border:none; padding: 20px 60px; font-size: 1.8rem; font-weight:bold; cursor:pointer; border-radius:10px; color: black;" onclick="start()">BẮT ĐẦU</button>
+    <div id="mainBtns">
+      <button class="btn" onclick="openChat()">AI Assistant</button>
+      <button class="btn" onclick="showMenu('studyMenu')">Learning Hub</button>
+    </div>
+
+    <div id="studyMenu" class="sub-menu">
+      <button class="btn" style="background: var(--light-blue);" onclick="startChallenge()">BẮT ĐẦU CHALLENGE (100P)</button>
+      <button class="btn" onclick="back()">Quay lại</button>
+    </div>
+  </div>
+
+  <div id="quizOverlay" class="overlay">
+    <div class="window">
+      <div class="header">
+        <span id="modeName">TRẮC NGHIỆM</span>
+        <span id="timer">100:00</span>
+      </div>
+      <div class="quiz-body">
+        <div id="qText" class="q-text">Đang tải...</div>
+        
+        <div id="ansGrid" class="ans-grid"></div>
+
+        <div id="quickArea" class="quick-input-area">
+          <input type="number" id="quickInput" class="quick-input" placeholder="Nhập kết quả...">
+          <button class="btn" style="width: auto; display: inline-block; margin-left: 10px;" onclick="checkQuick()">GỬI</button>
         </div>
+
+        <div style="margin-top: 30px; font-size: 0.9rem;">
+          Câu: <b><span id="qCount">1</span></b> | Đúng: <b style="color: var(--success-green);"><span id="score">0</span></b>
+        </div>
+      </div>
     </div>
-    
-    <div class="progress-bar"><div id="fill"></div></div>
-</div>
+  </div>
 
-<script>
-    const questions = [];
-    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+  <div id="chatOverlay" class="overlay">
+    <div class="window" style="height: 80vh;">
+      <div class="header"><span>AI Chatbot</span> <button onclick="closeAll()" style="color:white; background:none; border:none; cursor:pointer;">Đóng</button></div>
+      <iframe src="https://study-bot-web-e2um.onrender.com/" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+  </div>
 
-    function mix(c, w) {
-        let o = [c, ...w];
-        o.sort(() => Math.random() - 0.5);
-        return { o, a: o.indexOf(c) };
+  <script>
+    let currentQ = 1, score = 0, timer, timeLeft = 6000, correctAns = 0;
+
+    function showMenu(id) { document.getElementById('mainBtns').style.display='none'; document.getElementById(id).style.display='block'; }
+    function back() { document.querySelectorAll('.sub-menu').forEach(m=>m.style.display='none'); document.getElementById('mainBtns').style.display='block'; }
+    function openChat() { document.getElementById('chatOverlay').style.display='flex'; }
+    function closeAll() { document.querySelectorAll('.overlay').forEach(o=>o.style.display='none'); clearInterval(timer); }
+
+    function startChallenge() {
+      document.getElementById('quizOverlay').style.display = 'flex';
+      currentQ = 1; score = 0; timeLeft = 6000;
+      loadQuestion();
+      runTimer();
     }
 
-    // Sinh 100 câu hỏi Violympic Master
-    for(let i=0; i<100; i++) {
-        let type = rand(1, 6);
-        let q, c, w, cat;
+    function loadQuestion() {
+      document.getElementById('qCount').innerText = currentQ;
+      document.getElementById('score').innerText = score;
+      const isQuick = Math.random() > 0.5; // Ngẫu nhiên chọn chế độ
+      
+      const a = Math.floor(Math.random() * 100) + 20;
+      correctAns = 180 - a;
 
-        if (type === 1) {
-            cat = "HÌNH HỌC NÂNG CAO";
-            let g = rand(40, 140);
-            q = `Cho tam giác ABC cân tại A có góc A = ${g}°. Đường cao AH và đường phân giác BD cắt nhau tại K. Số đo góc AKD phụ thuộc vào góc A, tính góc AKD theo g? (Dạng tổng quát: 90° + A/4)`;
-            c = `${90 + g/4}°`; w = [`${g}°`, `${180-g}°`, `${90 + g/2}°` ];
-        } else if (type === 2) {
-            cat = "ĐẠI SỐ - TÌM X";
-            let a = rand(2, 9);
-            q = `Tìm x biết: (x - 1)^2 + (y + 2)^2 + (z - ${a})^2 = 0. Giá trị x + y + z là:`;
-            c = `${1 - 2 + a}`; w = [`0`, `${a}`, `${a+3}` ];
-        } else if (type === 3) {
-            cat = "TỈ LỆ THỨC";
-            let s = rand(10, 50);
-            q = `Biết 2x = 3y = 5z và x + y + z = ${s}. Giá trị của x là (làm tròn):`;
-            let k = s / (1/2 + 1/3 + 1/5);
-            c = `${(k/2).toFixed(1)}`; w = [`${(k/3).toFixed(1)}`, `${(k/5).toFixed(1)}`, `${s}` ];
-        } else if (type === 4) {
-            cat = "SỐ HỌC LŨY THỪA";
-            let n = rand(2, 5);
-            q = `Tìm x biết 2^x + 2^{x+3} = ${Math.pow(2, n) + Math.pow(2, n+3)}. Giá trị x là:`;
-            c = `${n}`; w = [`${n+1}`, `${n+3}`, `${2*n}` ];
-        } else if (type === 5) {
-            cat = "GÓC KỀ BÙ & PHÂN GIÁC";
-            let goc = rand(10, 170);
-            q = `Cho góc ABC = ${goc}°. Góc CBD kề bù với ABC. Gọi Bm là phân giác góc CBD. Tính góc ABm?`;
-            c = `${goc + (180-goc)/2}°`; w = [`90°`, `${(180-goc)/2}°`, `180°` ];
-        } else {
-            cat = "TOÁN ĐỐ TỈ LỆ";
-            let thợ = rand(3, 10);
-            let ngày = rand(5, 15);
-            q = `${thợ} người làm xong công việc trong ${ngày} ngày. Muốn làm xong trong ${ngày-2} ngày cần thêm bao nhiêu người (năng suất như nhau)?`;
-            let total = Math.ceil((thợ * ngày) / (ngày - 2));
-            c = `${total - thợ} người`; w = [`${total} người`, `2 người`, `5 người` ];
-        }
-        const res = mix(c, w);
-        questions.push({ q, o: res.o, a: res.a, cat });
+      if(isQuick) {
+        // CHẾ ĐỘ TRẢ LỜI NHANH
+        document.getElementById('modeName').innerText = "TRẢ LỜI NHANH";
+        document.getElementById('ansGrid').style.display = 'none';
+        document.getElementById('quickArea').style.display = 'block';
+        document.getElementById('qText').innerText = `Góc kề bù với góc ${a}° là bao nhiêu độ?`;
+        document.getElementById('quickInput').value = '';
+        document.getElementById('quickInput').focus();
+      } else {
+        // CHẾ ĐỘ TRẮC NGHIỆM
+        document.getElementById('modeName').innerText = "TRẮC NGHIỆM";
+        document.getElementById('ansGrid').style.display = 'grid';
+        document.getElementById('quickArea').style.display = 'none';
+        document.getElementById('qText').innerText = `Cho hai góc kề bù, một góc bằng ${a}°. Góc còn lại là:`;
+        
+        const grid = document.getElementById('ansGrid');
+        grid.innerHTML = '';
+        [correctAns, correctAns+10, correctAns-10, 90].sort(()=>Math.random()-0.5).forEach(val => {
+          const b = document.createElement('button');
+          b.className = 'btn'; b.innerText = val + "°";
+          b.onclick = () => { if(val === correctAns) score++; currentQ++; loadQuestion(); };
+          grid.appendChild(b);
+        });
+      }
     }
 
-    let curr = 0, score = 0, time = 1800; // 30 phút
-
-    function start() {
-        render();
-        const interval = setInterval(() => {
-            if(time > 0) {
-                time--;
-                let m = Math.floor(time/60), s = time%60;
-                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-                if(time <= 300) document.getElementById('timer').style.color = "#ff4d4d";
-            } else { clearInterval(interval); finish(); }
-        }, 1000);
+    function checkQuick() {
+      const val = parseInt(document.getElementById('quickInput').value);
+      if(val === correctAns) score++;
+      currentQ++;
+      loadQuestion();
     }
 
-    function render() {
-        if(curr >= 100) return finish();
-        const item = questions[curr];
-        document.getElementById('qn-count').innerText = curr + 1;
-        document.getElementById('fill').style.width = `${curr}%`;
-        document.getElementById('quiz-body').innerHTML = `
-            <div class="category-tag">${item.cat}</div>
-            <div class="q-text"><b>Câu ${curr+1}:</b> ${item.q}</div>
-            <div class="grid">
-                ${item.o.map((opt, i) => `<button class="btn-opt" onclick="check(${i})"><b>${String.fromCharCode(65+i)}.</b> ${opt}</button>`).join('')}
-            </div>
-        `;
+    // Cho phép nhấn Enter để gửi câu trả lời nhanh
+    document.getElementById('quickInput').addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') checkQuick();
+    });
+
+    function runTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        let m = Math.floor(timeLeft/60), s = timeLeft%60;
+        document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
+        if(timeLeft-- <= 0) { clearInterval(timer); alert("Hết giờ! Kết quả: " + score + " câu đúng."); closeAll(); }
+      }, 1000);
     }
 
-    window.check = (i) => {
-        if(i === questions[curr].a) score++;
-        curr++;
-        render();
-    }
-
-    function finish() {
-        document.getElementById('quiz-body').innerHTML = `
-            <div style="text-align:center; padding-top:5%">
-                <h1 style="color:var(--accent)">HOÀN THÀNH BÀI THI</h1>
-                <div style="font-size: 6rem; color: var(--primary); font-weight: bold;">${score}/100</div>
-                <p style="font-size: 1.5rem;">Điểm số: ${(score/10).toFixed(1)}</p>
-                <p>Thời gian sử dụng: ${Math.floor((1800-time)/60)} phút ${(1800-time)%60} giây</p>
-                <button style="background:var(--accent); border:none; padding:15px 40px; cursor:pointer; font-weight:bold; border-radius:5px; color: black;" onclick="location.reload()">THI LẠI</button>
-            </div>
-        `;
-    }
-</script>
+    // Âm nhạc
+    let playing = false;
+    document.getElementById('musicBtn').onclick = () => {
+      const m = document.getElementById('bgMusic');
+      if(!playing) m.play(); else m.pause();
+      playing = !playing;
+      document.getElementById('musicBtn').innerText = playing ? '🔊' : '🎧';
+    };
+  </script>
 </body>
 </html>
