@@ -2,172 +2,140 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THCS Geometry & Algebra Quiz</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Math Master 100 - Speed Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #007bff; --bg: #f8fafc; --text: #1e293b; }
-    body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-    .card { background: #fff; padding: 40px; border-radius: 24px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
-    .btn { padding: 18px; font-weight: 700; color: var(--primary); background: #fff; border: 2px solid var(--primary); border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 1rem; width: 100%; margin-top: 10px; }
-    .btn:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
+    :root { --primary: #007bff; --bg: #ffffff; --card-bg: #f8f9fa; --text: #212529; --border: #dee2e6; --success: #28a745; --danger: #dc3545; }
+    body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; color: var(--text); overflow: hidden; }
+    
+    .card { background: var(--card-bg); padding: 40px; border-radius: 16px; width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .btn { padding: 14px; font-weight: 600; color: var(--primary); background: #fff; border: 1px solid var(--primary); border-radius: 8px; cursor: pointer; transition: 0.2s; width: 100%; margin: 8px 0; }
+    .btn:hover { background: var(--primary); color: #fff; }
+
     .overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 1000; justify-content: center; align-items: center; flex-direction: column; }
-    .window { width: 95%; max-width: 600px; padding: 30px; text-align: center; }
-    .q-cat { font-size: 0.85rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-    .q-text { font-size: 1.4rem; font-weight: 700; min-height: 120px; display: flex; align-items: center; justify-content: center; color: #334155; line-height: 1.5; }
-    .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    input { width: 100%; padding: 18px; border: 3px solid var(--primary); border-radius: 12px; font-size: 1.6rem; text-align: center; outline: none; box-sizing: border-box; background: #fdfdfd; }
+    .window { width: 90%; max-width: 750px; padding: 20px; text-align: center; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+    .timer { font-size: 1.5rem; font-weight: 700; color: var(--danger); }
+    .q-text { font-size: 1.6rem; font-weight: 600; min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin-bottom: 20px; }
+    
+    .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    input { width: 100%; padding: 18px; border: 2px solid var(--primary); border-radius: 10px; font-size: 2rem; text-align: center; outline: none; }
+
+    /* Bảng Kết Quả */
+    #resultBoard { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+    .res-card { background: #fff; padding: 40px; border-radius: 24px; width: 90%; max-width: 550px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .res-score { font-size: 4rem; font-weight: 800; color: var(--primary); margin: 5px 0; }
+    .res-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 25px 0; }
+    .res-item { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #eee; }
+    .res-label { font-size: 0.7rem; color: #6c757d; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+    .res-val { font-size: 1.1rem; font-weight: 700; color: var(--text); }
   </style>
 </head>
 <body>
 
   <div class="card" id="mainMenu">
-    <h1 style="color: var(--primary); margin: 0;">QUIZ HÌNH & ĐẠI</h1>
-    <p>30 câu / 30 phút - Số liệu thay đổi liên tục</p>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px;">
-      <button class="btn" onclick="startQuiz(6)">LỚP 6</button>
-      <button class="btn" onclick="startQuiz(7)">LỚP 7</button>
-      <button class="btn" onclick="startQuiz(8)">LỚP 8</button>
-      <button class="btn" onclick="startQuiz(9)">LỚP 9</button>
+    <h1>TOÁN THCS 100</h1>
+    <p style="color: #6c757d;">100 câu | 30 phút | Tỉ lệ 75:25</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+      <button class="btn" onclick="startQuiz(6)">Lớp 6</button>
+      <button class="btn" onclick="startQuiz(7)">Lớp 7</button>
+      <button class="btn" onclick="startQuiz(8)">Lớp 8</button>
+      <button class="btn" onclick="startQuiz(9)">Lớp 9</button>
     </div>
   </div>
 
   <div id="quizOverlay" class="overlay">
     <div class="window">
-      <div style="display: flex; justify-content: space-between; font-weight: 700; color: #94a3b8; margin-bottom: 20px;">
-        <span id="gradeTitle">LỚP</span>
-        <span id="timer" style="color: #ef4444;">30:00</span>
+      <div class="header">
+        <span id="gradeTitle" style="font-weight: 700; color: var(--primary);">KHỐI</span>
+        <span id="timer" class="timer">30:00</span>
       </div>
-      <div id="qCat" class="q-cat"></div>
-      <div id="qText" class="q-text">Đang tạo thử thách...</div>
-      
+      <div id="qCat" style="color: #6c757d; font-size: 0.8rem; font-weight: 800; text-transform: uppercase;">ĐẠI SỐ</div>
+      <div id="qText" class="q-text">...</div>
       <div id="ansGrid" class="ans-grid"></div>
-      <div id="quickArea" style="display:none;">
-        <input type="text" id="quickInput" placeholder="Nhập kết quả..." autocomplete="off">
-      </div>
-      
-      <div style="margin-top: 40px; color: #94a3b8; font-size: 0.9rem; font-weight: 600;">
-        TIẾN ĐỘ: <span id="qCount" style="color: var(--text)">1</span>/30 | ĐÚNG: <span id="score" style="color: #2ecc71">0</span>
-      </div>
+      <div id="quickArea" style="display:none;"><input type="text" id="quickInput" placeholder="?" autocomplete="off"></div>
+      <div style="margin-top: 30px; font-weight: 700;">Câu: <span id="qCount">1</span>/100 | Đúng: <span id="score" style="color: var(--success);">0</span></div>
     </div>
   </div>
 
-  <div id="resultScreen" class="overlay">
-    <div class="window">
-      <h2 style="color: #64748b;">HOÀN THÀNH THỬ THÁCH</h2>
-      <h1 id="finalScoreText" style="font-size: 5rem; color: var(--primary); margin: 20px 0;">0/30</h1>
-      <button class="btn" onclick="location.reload()">LÀM ĐỀ MỚI</button>
+  <div id="resultBoard">
+    <div class="res-card">
+      <h2 style="margin: 0; color: #6c757d;">KẾT QUẢ CUỐI CÙNG</h2>
+      <div class="res-score" id="finalScore">0/100</div>
+      <div class="res-grid">
+        <div class="res-item"><div class="res-label">Thời gian</div><div class="res-val" id="finalTime">00:00</div></div>
+        <div class="res-item" style="background: #eef2ff;"><div class="res-label" style="color: var(--primary);">Tốc độ/Câu</div><div class="res-val" id="finalSpeed" style="color: var(--primary);">0s</div></div>
+        <div class="res-item"><div class="res-label">Tỷ lệ đúng</div><div class="res-val" id="finalPercent">0%</div></div>
+        <div class="res-item"><div class="res-label">Đúng</div><div class="res-val" id="finalCorrect" style="color: var(--success);">0</div></div>
+        <div class="res-item"><div class="res-label">Sai</div><div class="res-val" id="finalWrong" style="color: var(--danger);">0</div></div>
+        <div class="res-item"><div class="res-label">Bỏ qua</div><div class="res-val" id="finalSkip">0</div></div>
+      </div>
+      <button class="btn" onclick="location.reload()" style="background: var(--primary); color: #fff; font-size: 1.1rem;">LÀM LẠI THỬ THÁCH</button>
     </div>
   </div>
 
   <script>
-    let currentGrade, currentQ, score, timeLeft, timer, correctVal, quickIndices;
+    let currentGrade, currentQ, score, timeLeft, timer, correctVal, quickIndices, startTime;
     const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     function startQuiz(grade) {
-      currentGrade = grade; currentQ = 1; score = 0; timeLeft = 1800;
+      currentGrade = grade; currentQ = 1; score = 0; timeLeft = 1800; startTime = Date.now();
       document.getElementById('mainMenu').style.display = 'none';
       document.getElementById('quizOverlay').style.display = 'flex';
-      quickIndices = []; 
-      while(quickIndices.length < 10) { 
-        let n = r(1, 30); if(!quickIndices.includes(n)) quickIndices.push(n); 
-      }
-      loadQuestion();
-      runTimer();
+      quickIndices = []; while(quickIndices.length < 25) { let n = r(1, 100); if(!quickIndices.includes(n)) quickIndices.push(n); }
+      loadQuestion(); runTimer();
     }
 
-    function generateQuestion(grade) {
-      let a = r(2, 15), b = r(2, 10), c = r(3, 8);
-      
-      if(grade == 6) {
-        const d = [
-          {c:"Hình học", q:`Một góc bẹt có số đo là bao nhiêu độ?`, a: 180},
-          {c:"Hình học", q:`Tam giác có chu vi bằng bao nhiêu nếu 3 cạnh lần lượt là ${a}, ${a+1}, ${a+2}?`, a: 3*a+3},
-          {c:"Số nguyên", q:`Tính giá trị: |-${a}| + ${b}?`, a: a+b},
-          {c:"Ước & Bội", q:`ƯCLN của ${a} và ${a*2} là?`, a: a}
-        ];
-        return d[r(0, d.length-1)];
-      }
-      if(grade == 7) {
-        const d = [
-          {c:"Hình học", q:`Góc kề bù với góc ${a*10}° có số đo là bao nhiêu độ?`, a: 180 - a*10},
-          {c:"Hình học", q:`Tam giác ABC có góc A=${a*5}°, B=${a*6}°. Tính số đo góc C?`, a: 180 - a*11},
-          {c:"Số thực", q:`Căn bậc hai số học của ${a*a} là?`, a: a},
-          {c:"Tỉ lệ thức", q:`Tìm x biết x/${a} = ${b}/1?`, a: a*b}
-        ];
-        return d[r(0, d.length-1)];
-      }
-      if(grade == 8) {
-        const d = [
-          {c:"Hình học", q:`Tổng các góc của một tứ giác lồi là bao nhiêu độ?`, a: 360},
-          {c:"Hình học", q:`Hình chữ nhật có chiều dài ${a+5}, chiều rộng ${a}. Diện tích là?`, a: (a+5)*a},
-          {c:"Đại số", q:`Hệ số của x trong khai triển (x + ${a})^2 là?`, a: 2*a},
-          {c:"Đại số", q:`Nghiệm của phương trình ${a}x - ${a*b} = 0 là?`, a: b}
-        ];
-        return d[r(0, d.length-1)];
-      }
-      if(grade == 9) {
-        const d = [
-          {c:"Hình học", q:`Đường tròn có bán kính ${a}. Độ dài đường kính là?`, a: a*2},
-          {c:"Hình học", q:`Trong tam giác vuông, cạnh huyền là 10, một cạnh góc vuông là 6. Cạnh còn lại là?`, a: 8},
-          {c:"Đại số", q:`Hệ số góc của đường thẳng y = ${a}x + ${b} là?`, a: a},
-          {c:"Đại số", q:`Tính √( ${a*a} ) + √( ${b*b} )?`, a: a+b},
-          {c:"Hình khối", q:`Hình trụ có bán kính đáy 1, chiều cao ${a}. Thể tích là bao nhiêu π?`, a: a}
-        ];
-        return d[r(0, d.length-1)];
-      }
+    function generateQuestion(g) {
+      let a = r(2, 12), b = r(2, 10), h = r(3, 8);
+      const pools = {
+        6: [{c:"Đại số", q:`Tính: ${a} * ${b} + ${a}?`, a: a*b+a}, {c:"Hình học", q:`Góc bẹt có số đo bao nhiêu độ?`, a: 180}, {c:"Hình học", q:`Chu vi hình vuông cạnh ${a} là?`, a: a*4}],
+        7: [{c:"Đại số", q:`Căn bậc hai số học của ${a*a} là?`, a: a}, {c:"Hình học", q:`Tổng 3 góc tam giác là?`, a: 180}, {c:"Hình học", q:`Góc kề bù với ${a*10}° là?`, a: 180-a*10}],
+        8: [{c:"Hình học", q:`Diện tích hình thang đáy ${a}, ${a+2}, cao 10 là?`, a: (a+a+2)*5}, {c:"Hình học", q:`Diện tích hình thoi có đường chéo ${a}, ${b*2} là?`, a: a*b}, {c:"Đại số", q:`Hệ số x trong (x+${a})^2?`, a: 2*a}],
+        9: [{c:"Đại số", q:`Hệ số góc y = ${a}x + 5?`, a: a}, {c:"Hình học", q:`Đường kính đường tròn bán kính ${a}?`, a: a*2}, {c:"Đại số", q:`√(${a*a}) + √(${b*b})?`, a: a+b}]
+      };
+      let list = pools[g]; return list[r(0, list.length-1)];
     }
 
     function loadQuestion() {
-      if(currentQ > 30) { showFinalResult(); return; }
-      let data = generateQuestion(currentGrade);
-      document.getElementById('qCat').innerText = data.c;
-      document.getElementById('qText').innerText = data.q;
+      if(currentQ > 100) { showResultBoard(); return; }
+      let d = generateQuestion(currentGrade);
+      document.getElementById('qCat').innerText = d.c;
+      document.getElementById('qText').innerText = d.q;
       document.getElementById('qCount').innerText = currentQ;
-      document.getElementById('score').innerText = score;
-      correctVal = data.a;
-
-      const isQuick = quickIndices.includes(currentQ);
+      correctVal = d.a;
+      let isQuick = quickIndices.includes(currentQ);
       document.getElementById('ansGrid').style.display = isQuick ? 'none' : 'grid';
       document.getElementById('quickArea').style.display = isQuick ? 'block' : 'none';
-
-      if(isQuick) {
-        document.getElementById('quickInput').value = '';
-        setTimeout(() => document.getElementById('quickInput').focus(), 50);
-      } else {
-        let choices = [correctVal, correctVal + r(1,3), correctVal - r(1,2), r(2, 40)].sort(() => Math.random()-0.5);
-        const grid = document.getElementById('ansGrid');
-        grid.innerHTML = '';
-        choices.forEach(v => {
-          const btn = document.createElement('button');
-          btn.className = 'btn'; btn.innerText = v;
-          btn.onclick = () => { if(v == correctVal) score++; currentQ++; loadQuestion(); };
-          grid.appendChild(btn);
-        });
+      if(isQuick) { document.getElementById('quickInput').value = ''; setTimeout(()=>document.getElementById('quickInput').focus(), 50); }
+      else {
+        let opts = [correctVal, correctVal+1, r(0,50), correctVal-1].sort(()=>Math.random()-0.5);
+        const grid = document.getElementById('ansGrid'); grid.innerHTML = '';
+        opts.forEach(v => { const b = document.createElement('button'); b.className = 'btn'; b.innerText = v; b.onclick = () => { if(v==correctVal) score++; next(); }; grid.appendChild(b); });
       }
     }
 
-    function runTimer() {
-      timer = setInterval(() => {
-        let m = Math.floor(timeLeft/60), s = timeLeft%60;
-        document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
-        if(timeLeft-- <= 0) showFinalResult();
-      }, 1000);
-    }
+    function next() { currentQ++; document.getElementById('score').innerText = score; loadQuestion(); }
+    function runTimer() { timer = setInterval(() => { let m = Math.floor(timeLeft/60), s = timeLeft%60; document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`; if(timeLeft-- <= 0) showResultBoard(); }, 1000); }
 
-    function showFinalResult() {
+    function showResultBoard() {
       clearInterval(timer);
       document.getElementById('quizOverlay').style.display = 'none';
-      document.getElementById('resultScreen').style.display = 'flex';
-      document.getElementById('finalScoreText').innerText = score + "/30";
+      document.getElementById('resultBoard').style.display = 'flex';
+      const timeUsed = 1800 - timeLeft;
+      const m = Math.floor(timeUsed/60), s = timeUsed%60;
+      const avgSpeed = (timeUsed / currentQ).toFixed(1);
+      document.getElementById('finalScore').innerText = score + "/100";
+      document.getElementById('finalTime').innerText = `${m}:${s<10?'0'+s:s}`;
+      document.getElementById('finalSpeed').innerText = avgSpeed + "s";
+      document.getElementById('finalPercent').innerText = ((score/100)*100).toFixed(0) + "%";
+      document.getElementById('finalCorrect').innerText = score;
+      document.getElementById('finalWrong').innerText = 100 - score;
+      document.getElementById('finalSkip').innerText = 100 - (currentQ - 1);
     }
 
-    document.getElementById('quickInput').addEventListener('keypress', (e) => {
-      if(e.key === 'Enter') {
-        if(parseInt(e.target.value) === correctVal) score++;
-        currentQ++; loadQuestion();
-      }
-    });
+    document.getElementById('quickInput').addEventListener('keypress', (e)=>{ if(e.key==='Enter') { if(parseFloat(e.target.value)==correctVal) score++; next(); } });
   </script>
 </body>
 </html>
